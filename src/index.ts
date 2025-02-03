@@ -5,6 +5,8 @@ import {BitField, Client, Partials} from "discord.js";
 import {DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
 import {dealWithCommand, deployCommands} from "./interactions/commandInteractions";
 import {CommissionChannel} from "./classes/commissions/commission.channel.class";
+import {dealWithButton} from "./interactions/buttonInteractions";
+import { dealWithModel } from "./interactions/modalInteractions";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -44,6 +46,12 @@ client.on("guildCreate", async (guild) => {
 client.on("interactionCreate", async (interaction) => {
     if (interaction.isCommand()) {
         await dealWithCommand(interaction);
+    }
+    if(interaction.isButton()) {
+        await dealWithButton(interaction);
+    }
+    if(interaction.isModalSubmit()) {
+        await dealWithModel(interaction);
     }
 });
 

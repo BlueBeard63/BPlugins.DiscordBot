@@ -1,11 +1,11 @@
 import {Commission} from "./commission.class";
 import {DataTypes, Model} from "sequelize";
 import {sequelizeConnection} from "../../database/database";
-import {CommissionOwner} from "./commission.owner.class";
 
 export class CommissionChannel extends Model {
     declare id: string;
     declare channelId: string;
+    declare baseMessageId: string;
     declare commissionId: string;
 }
 
@@ -16,6 +16,10 @@ CommissionChannel.init({
         primaryKey: true,
     },
     channelId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    baseMessageId: {
         type: DataTypes.STRING,
         allowNull: false,
     },

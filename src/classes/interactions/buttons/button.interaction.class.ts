@@ -5,12 +5,31 @@ import {ButtonExtra} from "./button.extra";
 
 export class Buttons extends Model {
     declare buttonId: string;
-    declare buttonShortId: string;
     declare channelId: string;
     declare messageId: string;
     declare buttonType: EButtonType;
     declare buttonExtraData: string;
     declare extraData: ButtonExtra;
+
+    static async doesButtonExist(buttonId: string, channelId: any, messageId: string) : Promise<boolean> {
+        return await Buttons.count({
+            where: {
+                buttonId: buttonId,
+                channelId: channelId,
+                messageId: messageId
+            }
+        }) !== 0;
+    }
+
+    static async getButton(buttonId: string, channelId: any, messageId: string) : Promise<Buttons>{
+        return (await Buttons.findOne({
+            where: {
+                buttonId: buttonId,
+                channelId: channelId,
+                messageId: messageId
+            }
+        }))!;
+    }
 }
 
 Buttons.init({
@@ -18,10 +37,6 @@ Buttons.init({
         type: DataTypes.CHAR(36),
         allowNull: false,
         primaryKey: true,
-    },
-    buttonShortId: {
-        type: DataTypes.CHAR(8),
-        allowNull: false,
     },
     buttonType: {
         type: DataTypes.ENUM(...Object.values(EButtonType)),
