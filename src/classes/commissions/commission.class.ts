@@ -1,11 +1,13 @@
 import {DataTypes, Model} from "sequelize";
 import {sequelizeConnection} from "../../database/database";
+import {ECommissionStatus} from "./ECommissionStatus";
 
 export class Commission extends Model {
     declare commissionId: string;
     declare commissionNumber: number;
     declare commissionName: string;
     declare commissionBudget: number;
+    declare commissionStatus: ECommissionStatus;
 }
 
 Commission.init({
@@ -15,7 +17,7 @@ Commission.init({
         primaryKey: true,
     },
     commissionNumber: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         unique: true,
         autoIncrement: true,
@@ -26,9 +28,14 @@ Commission.init({
         defaultValue: "Unknown",
     },
     commissionBudget: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
+    },
+    commissionStatus: {
+        type: DataTypes.ENUM(...Object.values(ECommissionStatus)),
+        allowNull: false,
+        defaultValue: ECommissionStatus.NotStarted,
     }
 }, {
     sequelize: sequelizeConnection,

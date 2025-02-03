@@ -1,14 +1,17 @@
 import {Buttons} from "./classes/interactions/buttons/button.interaction.class";
 import {Commission} from "./classes/commissions/commission.class";
 import {CommissionOwner} from "./classes/commissions/commission.owner.class";
-import {Client, Partials} from "discord.js";
-import {DISCORD_BOT_SECRET} from "./environment";
+import {BitField, Client, Partials} from "discord.js";
+import {DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
+import {dealWithCommand, deployCommands} from "./interactions/commandInteractions";
+import {CommissionChannel} from "./classes/commissions/commission.channel.class";
 
 const dbSync = async () => {
     await Buttons.sync();
 
     await Commission.sync();
     await CommissionOwner.sync();
+    await CommissionChannel.sync();
 }
 
 const client = new Client({
@@ -16,8 +19,8 @@ const client = new Client({
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
-client.once("ready", () => {
-    dbSync();
+client.once("ready", async () => {
+    await dbSync();
 
     console.log("Bot has been launched!");
     console.log(client.generateInvite({
@@ -29,14 +32,19 @@ client.once("ready", () => {
         ]
     }));
 
-    client.guilds.cache.forEach(async (guild) => {
+    client.guilds.cache.forEach(async guild => {
+        await deployCommands({guildId: guild.id}, DISCORD_BOT_ID as string);
     });
 });
 
 client.on("guildCreate", async (guild) => {
+    await deployCommands({guildId: guild.id}, DISCORD_BOT_ID as string);
 });
 
 client.on("interactionCreate", async (interaction) => {
+    if (interaction.isCommand()) {
+        await dealWithCommand(interaction);
+    }
 });
 
 client.on("messageReactionRemove", async (messageReaction, user) => {
