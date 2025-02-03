@@ -10,3 +10,6 @@ export const DATABASE_PORT = process.env.DATABASE_PORT;
 export const DATABASE_USERNAME = process.env.DATABASE_USERNAME;
 export const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
 export const DATABASE_NAME = process.env.DATABASE_NAME;
+
+export const COMMISSIONS_CHANNEL_ID = process.env.COMMISSIONS_CHANNEL_ID;
+export const COMMISSIONS_DEV_ROLE_ID = process.env.COMMISSIONS_DEV_ROLE_ID;
