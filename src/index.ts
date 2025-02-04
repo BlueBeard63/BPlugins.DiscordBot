@@ -1,12 +1,12 @@
 import {Buttons} from "./classes/interactions/buttons/button.interaction.class";
 import {Commission} from "./classes/commissions/commission.class";
 import {CommissionOwner} from "./classes/commissions/commission.owner.class";
-import {BitField, Client, Partials} from "discord.js";
-import {DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
+import {Client, Events, GatewayIntentBits, Partials} from "discord.js";
+import {DEFAULT_ROLE_ID, DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
 import {dealWithCommand, deployCommands} from "./interactions/commandInteractions";
 import {CommissionChannel} from "./classes/commissions/commission.channel.class";
 import {dealWithButton} from "./interactions/buttonInteractions";
-import { dealWithModel } from "./interactions/modalInteractions";
+import {dealWithModel} from "./interactions/modalInteractions";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -17,7 +17,7 @@ const dbSync = async () => {
 }
 
 const client = new Client({
-    intents: ["Guilds", "GuildMessages", "GuildMessageReactions"],
+    intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildMembers],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
@@ -25,43 +25,37 @@ client.once("ready", async () => {
     await dbSync();
 
     console.log("Bot has been launched!");
-    console.log(client.generateInvite({
-        // @ts-ignore
-        permissions: new BitField(8),
-        scopes: [
-            // @ts-ignore
-            "bot"
-        ]
-    }));
+    console.log("https://discord.com/oauth2/authorize?client_id=1335982855444107285&permissions=8&integration_type=0&scope=bot");
 
     client.guilds.cache.forEach(async guild => {
         await deployCommands({guildId: guild.id}, DISCORD_BOT_ID as string);
     });
 });
 
-client.on("guildCreate", async (guild) => {
-    await deployCommands({guildId: guild.id}, DISCORD_BOT_ID as string);
-});
-
-client.on("interactionCreate", async (interaction) => {
+client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
+        console.log(`${interaction.member?.user.username} has called command.`);
         await dealWithCommand(interaction);
     }
-    if(interaction.isButton()) {
+    if (interaction.isButton()) {
+        console.log(`${interaction.member?.user.username} has pressed button.`);
         await dealWithButton(interaction);
     }
-    if(interaction.isModalSubmit()) {
+    if (interaction.isModalSubmit()) {
+        console.log(`${interaction.member?.user.username} has submitted a modal.`);
         await dealWithModel(interaction);
     }
 });
 
-client.on("messageReactionRemove", async (messageReaction, user) => {
+client.on(Events.MessageReactionRemove, async (messageReaction, user) => {
 });
 
-client.on("messageReactionAdd", async (messageReaction, user) => {
+client.on(Events.MessageReactionAdd, async (messageReaction, user) => {
 });
 
-client.on("guildMemberAdd", async (member) => {
+client.on(Events.GuildMemberAdd, async (member) => {
+    console.log(`New User: ${member.displayName} has joined!`);
+    await member.roles.add(DEFAULT_ROLE_ID);
 });
 
 client.login(DISCORD_BOT_SECRET);
