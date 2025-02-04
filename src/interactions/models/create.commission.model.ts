@@ -17,6 +17,7 @@ import {CommissionChannel} from "../../classes/commissions/commission.channel.cl
 import {CommissionOwner} from "../../classes/commissions/commission.owner.class";
 import {Buttons} from "../../classes/interactions/buttons/button.interaction.class";
 import {EButtonType} from "../../classes/interactions/buttons/EButtonType";
+import {ButtonExtra} from "../../classes/interactions/buttons/button.extra";
 
 export const data = new DiscordInteraction()
     .setName("createCommission");
@@ -85,24 +86,28 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
     });
 
     const lastMessageId = thread.lastMessageId;
+    const extraData = new ButtonExtra();
+    extraData.linkedCommissionId = commission.commissionId;
 
     await Buttons.create({
         buttonId: acceptCommissionButtonId,
-        channelId: COMMISSIONS_CHANNEL_ID as string,
+        channelId: thread.id,
         messageId: lastMessageId!,
-        buttonType: EButtonType.AcceptCommission
+        buttonType: EButtonType.AcceptCommission,
+        buttonExtraData: JSON.stringify(extraData)
     });
 
     await Buttons.create({
         buttonId: closeCommissionButtonId,
-        channelId: COMMISSIONS_CHANNEL_ID as string,
+        channelId: thread.id,
         messageId: lastMessageId!,
-        buttonType: EButtonType.RejectCommission
+        buttonType: EButtonType.RejectCommission,
+        buttonExtraData: JSON.stringify(extraData)
     });
 
     await CommissionChannel.create({
         id: randomUUID().toString(),
-        channelId: COMMISSIONS_CHANNEL_ID,
+        channelId: thread.id,
         baseMessageId: lastMessageId!,
         commissionId: commission.commissionId,
     });
