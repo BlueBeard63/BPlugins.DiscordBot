@@ -28,7 +28,10 @@ export async function execute(genericInfo: {
 }, interaction: Interaction, button: ButtonInteraction, databaseButton: Buttons) {
     const guildMember = interaction.guild!.members.cache.get(interaction.user.id)!;
 
-    if(!guildMember.roles.cache.has(COMMISSIONS_DEV_ROLE_ID)){
+    await guildMember.guild.roles.fetch();
+
+    console.log(guildMember.roles.cache.keys());
+    if(!guildMember.roles.cache.hasAny(COMMISSIONS_DEV_ROLE_ID)){
         await button.reply({
             content: "You do not have permission to accept a commission on behalf of BlueBeard63.",
             flags: "Ephemeral"
@@ -85,8 +88,7 @@ export async function execute(genericInfo: {
             {name: "Accepted By", value: "BlueBeard63"}
         );
 
-    const thread = interaction.guild!.channels.cache.get(commission_channel.channelId) as PrivateThreadChannel;
-    await thread.send({
+    await button.reply({
         embeds: [acceptedCommission],
     });
 
@@ -108,6 +110,7 @@ export async function execute(genericInfo: {
         components: [changeStatus_button, cancel_button],
     })
 
+    const thread = interaction.guild!.channels.cache.get(commission_channel.channelId) as PrivateThreadChannel;
     await thread.messages.cache.get(commission_channel!.baseMessageId)!.edit({
         components: [row]
     });
