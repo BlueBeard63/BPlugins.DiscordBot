@@ -30,6 +30,15 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
     const commission_id = randomUUID().toString();
     const dateParts = commission_due_date.split("/");
 
+    if(isNaN(parseInt(commission_budget))) {
+        await modal.reply({
+            content: "Please only input a numerical (number) value for the Commission Budget",
+            flags: "Ephemeral"
+        });
+
+        return;
+    }
+
     const commission = await Commission.create({
         commissionId: commission_id,
         commissionName: commission_name,
