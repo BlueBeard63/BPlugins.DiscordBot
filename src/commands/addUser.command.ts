@@ -4,7 +4,6 @@ import {
     EmbedBuilder,
     PrivateThreadChannel
 } from "discord.js";
-import {Commission} from "../classes/commissions/commission.class";
 import {CommissionOwner} from "../classes/commissions/commission.owner.class";
 import {randomUUID} from "crypto";
 import {CommissionChannel} from "../classes/commissions/commission.channel.class";

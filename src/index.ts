@@ -2,7 +2,7 @@ import {Buttons} from "./classes/interactions/buttons/button.interaction.class";
 import {Commission} from "./classes/commissions/commission.class";
 import {CommissionOwner} from "./classes/commissions/commission.owner.class";
 import {Client, Events, GatewayIntentBits, Partials} from "discord.js";
-import {DEFAULT_ROLE_IDS, DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
+import {DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
 import {dealWithCommand, deployCommands} from "./interactions/commandInteractions";
 import {CommissionChannel} from "./classes/commissions/commission.channel.class";
 import {dealWithButton} from "./interactions/buttonInteractions";
