@@ -41,7 +41,7 @@ Commission.init({
     commissionStatus: {
         type: DataTypes.ENUM(...Object.values(ECommissionStatus)),
         allowNull: false,
-        defaultValue: ECommissionStatus.NotStarted,
+        defaultValue: ECommissionStatus.Pending,
     }
 }, {
     sequelize: sequelizeConnection,

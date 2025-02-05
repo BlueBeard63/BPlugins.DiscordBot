@@ -4,4 +4,6 @@ export enum EButtonType {
     RejectCommission="RejectCommission",
     CreateCommission="CreateCommission",
     CommissionHelp="CommissionHelp",
+    CloseCommission="CloseCommission",
+    ChangeStatus="ChangeStatus",
 }
