@@ -16,6 +16,7 @@ import {Commission} from "../../classes/commissions/commission.class";
 import {CommissionChannel} from "../../classes/commissions/commission.channel.class";
 import {randomUUID} from "crypto";
 import {ButtonExtra} from "../../classes/interactions/buttons/button.extra";
+import {ECommissionStatus} from "../../classes/commissions/ECommissionStatus";
 
 export const data = new DiscordInteraction()
     .setName(EButtonType.AcceptCommission);
@@ -113,6 +114,14 @@ export async function execute(genericInfo: {
     const thread = interaction.guild!.channels.cache.get(commission_channel.channelId) as PrivateThreadChannel;
     await thread.messages.cache.get(commission_channel!.baseMessageId)!.edit({
         components: [row]
+    });
+
+    await Commission.update({
+        commissionStatus: ECommissionStatus.Accepted,
+    }, {
+        where: {
+            commissionId: commission.commissionId
+        }
     });
 
     const extraData = new ButtonExtra();
