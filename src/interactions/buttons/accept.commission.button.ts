@@ -11,7 +11,7 @@ import {
     TimestampStyles
 } from "discord.js";
 import {Buttons} from "../../classes/interactions/buttons/button.interaction.class";
-import {COMMISSIONS_CHANNEL_ID, COMMISSIONS_DEV_ROLE_ID} from "../../environment";
+import {COMMISSIONS_DEV_ROLE_ID} from "../../environment";
 import {Commission} from "../../classes/commissions/commission.class";
 import {CommissionChannel} from "../../classes/commissions/commission.channel.class";
 import {randomUUID} from "crypto";
