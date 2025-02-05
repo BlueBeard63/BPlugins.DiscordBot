@@ -13,3 +13,4 @@ export const DATABASE_NAME = process.env.DATABASE_NAME!;
 
 export const COMMISSIONS_CHANNEL_ID = process.env.COMMISSIONS_CHANNEL_ID!;
 export const COMMISSIONS_DEV_ROLE_ID = process.env.COMMISSIONS_DEV_ROLE_ID!;
+export const DEFAULT_ROLE_IDS = process.env.DEFAULT_ROLE_IDS!.split(',');

@@ -2,7 +2,7 @@ import {Buttons} from "./classes/interactions/buttons/button.interaction.class";
 import {Commission} from "./classes/commissions/commission.class";
 import {CommissionOwner} from "./classes/commissions/commission.owner.class";
 import {Client, Events, GatewayIntentBits, Partials} from "discord.js";
-import {DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
+import {DEFAULT_ROLE_IDS, DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
 import {dealWithCommand, deployCommands} from "./interactions/commandInteractions";
 import {CommissionChannel} from "./classes/commissions/commission.channel.class";
 import {dealWithButton} from "./interactions/buttonInteractions";
@@ -17,7 +17,7 @@ const dbSync = async () => {
 }
 
 const client = new Client({
-    intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
+    intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildMembers],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
@@ -52,5 +52,14 @@ client.on(Events.MessageReactionRemove, async (messageReaction, user) => {
 
 client.on(Events.MessageReactionAdd, async (messageReaction, user) => {
 });
+
+client.on(Events.GuildMemberAdd, async (member) => {
+    await member.guild.roles.fetch();
+
+    console.log(`New User: ${member.displayName}`);
+    console.log("Assigning Roles To New User");
+    await member.roles.add(DEFAULT_ROLE_IDS, "Default User Roles");
+    console.log("Assigned Roles To New User");
+})
 
 client.login(DISCORD_BOT_SECRET);
