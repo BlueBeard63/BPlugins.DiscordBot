@@ -13,10 +13,10 @@ import {
 import {Buttons} from "../../classes/interactions/buttons/button.interaction.class";
 import {COMMISSIONS_DEV_ROLE_ID} from "../../environment";
 import {Commission} from "../../classes/commissions/commission.class";
-import {CommissionChannel} from "../../classes/commissions/commission.channel.class";
 import {randomUUID} from "crypto";
 import {ButtonExtra} from "../../classes/interactions/buttons/button.extra";
 import {ECommissionStatus} from "../../classes/commissions/ECommissionStatus";
+import {GetCommissionChannelAndCommission} from "../../helpers/gatherButtonsData";
 
 export const data = new DiscordInteraction()
     .setName(EButtonType.AcceptCommission);
@@ -31,8 +31,7 @@ export async function execute(genericInfo: {
 
     await guildMember.guild.roles.fetch();
 
-    console.log(guildMember.roles.cache.keys());
-    if(!guildMember.roles.cache.hasAny(COMMISSIONS_DEV_ROLE_ID)){
+    if (!guildMember.roles.cache.hasAny(COMMISSIONS_DEV_ROLE_ID)) {
         await button.reply({
             content: "You do not have permission to accept a commission on behalf of BlueBeard63.",
             flags: "Ephemeral"
@@ -41,41 +40,11 @@ export async function execute(genericInfo: {
         return;
     }
 
-    const commission_id = databaseButton.extraData.linkedCommissionId;
+    const {commission, commissionChannel, error} = await GetCommissionChannelAndCommission(databaseButton);
 
-    if(commission_id === "" || commission_id === undefined) {
+    if (error !== "") {
         await button.reply({
-            content: "Error Accepting Commission, buttons linkedCommissionId is empty or undefined.",
-            flags: "Ephemeral"
-        });
-
-        return;
-    }
-
-    const commission = await Commission.findOne({
-        where: {
-            commissionId: commission_id
-        }
-    });
-
-    if(commission === null) {
-        await button.reply({
-            content: "Error Accepting Commission, commission was null when fetched from database.",
-            flags: "Ephemeral"
-        });
-
-        return;
-    }
-
-    const commission_channel = await CommissionChannel.findOne({
-        where: {
-            commissionId: commission_id
-        }
-    });
-
-    if(commission_channel === null) {
-        await button.reply({
-            content: "Error Accepting Commission, commission_channel was null when fetched from database.",
+            content: error,
             flags: "Ephemeral"
         });
 
@@ -83,7 +52,7 @@ export async function execute(genericInfo: {
     }
 
     const acceptedCommission = new EmbedBuilder()
-        .setTitle(`Commission-${commission.commissionNumber} Accepted`)
+        .setTitle(`Commission-${commission!.commissionNumber} Accepted`)
         .setFields(
             {name: "Accepted At", value: time(new Date(new Date().toUTCString()), TimestampStyles.LongDateTime)},
             {name: "Accepted By", value: "BlueBeard63"}
@@ -102,7 +71,7 @@ export async function execute(genericInfo: {
 
     const cancelCommissionButtonId = randomUUID().toString();
     const cancel_button = new ButtonBuilder()
-        .setCustomId(EButtonType.CloseCommission + "-" +cancelCommissionButtonId)
+        .setCustomId(EButtonType.CloseCommission + "-" + cancelCommissionButtonId)
         .setLabel("Cancel Commission")
         .setStyle(ButtonStyle.Danger)
         .setEmoji("🗑️");
@@ -111,8 +80,8 @@ export async function execute(genericInfo: {
         components: [changeStatus_button, cancel_button],
     })
 
-    const thread = interaction.guild!.channels.cache.get(commission_channel.channelId) as PrivateThreadChannel;
-    await thread.messages.cache.get(commission_channel!.baseMessageId)!.edit({
+    const thread = interaction.guild!.channels.cache.get(commissionChannel!.channelId) as PrivateThreadChannel;
+    await thread.messages.cache.get(commissionChannel!.baseMessageId)!.edit({
         components: [row]
     });
 
@@ -120,18 +89,18 @@ export async function execute(genericInfo: {
         commissionStatus: ECommissionStatus.Accepted,
     }, {
         where: {
-            commissionId: commission.commissionId
+            commissionId: commission!.commissionId
         }
     });
 
     const extraData = new ButtonExtra();
-    extraData.linkedCommissionId = commission.commissionId;
+    extraData.linkedCommissionId = commission!.commissionId;
 
     // Get rid of the old buttons in the database as they have been replaced
     await Buttons.destroy({
         where: {
             channelId: thread.id,
-            messageId: commission_channel.baseMessageId!,
+            messageId: commissionChannel!.baseMessageId!,
         }
     });
 
@@ -139,7 +108,7 @@ export async function execute(genericInfo: {
     await Buttons.create({
         buttonId: changeStatusButtonId,
         channelId: thread.id,
-        messageId: commission_channel.baseMessageId!,
+        messageId: commissionChannel!.baseMessageId!,
         buttonType: EButtonType.ChangeStatus,
         buttonExtraData: JSON.stringify(extraData)
     });
@@ -147,7 +116,7 @@ export async function execute(genericInfo: {
     await Buttons.create({
         buttonId: cancelCommissionButtonId,
         channelId: thread.id,
-        messageId: commission_channel.baseMessageId!,
+        messageId: commissionChannel!.baseMessageId!,
         buttonType: EButtonType.ChangeStatus,
         buttonExtraData: JSON.stringify(extraData)
     });

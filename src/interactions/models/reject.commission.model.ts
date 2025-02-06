@@ -49,7 +49,7 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
 
     if(commission === null) {
         await modal.reply({
-            content: "Error Accepting Commission, commission was null when fetched from database.",
+            content: "Error Commission, commission was null when fetched from database.",
             flags: "Ephemeral"
         });
 
@@ -64,7 +64,7 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
 
     if(commission_channel === null) {
         await modal.reply({
-            content: "Error Accepting Commission, commission_channel was null when fetched from database.",
+            content: "Error Commission, commission_channel was null when fetched from database.",
             flags: "Ephemeral"
         });
 

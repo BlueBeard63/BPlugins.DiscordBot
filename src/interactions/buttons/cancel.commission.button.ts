@@ -5,7 +5,7 @@ import {Buttons} from "../../classes/interactions/buttons/button.interaction.cla
 import {GetCommissionChannelAndCommission} from "../../helpers/gatherButtonsData";
 
 export const data = new DiscordInteraction()
-    .setName(EButtonType.CommissionHelp);
+    .setName(EButtonType.CloseCommission);
 
 export async function execute(genericInfo: {
     guildId: string,
@@ -23,6 +23,5 @@ export async function execute(genericInfo: {
 
         return;
     }
-
     // TODO
 }
