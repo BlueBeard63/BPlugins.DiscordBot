@@ -7,6 +7,7 @@ import {dealWithCommand, deployCommands} from "./interactions/commandInteraction
 import {CommissionChannel} from "./classes/commissions/commission.channel.class";
 import {dealWithButton} from "./interactions/buttonInteractions";
 import {dealWithModel} from "./interactions/modalInteractions";
+import {CommissionWatcher} from "./helpers/commissionWatcher";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -62,4 +63,5 @@ client.on(Events.GuildMemberAdd, async (member) => {
     console.log("Assigned Roles To New User");
 })
 
+new CommissionWatcher(client);
 client.login(DISCORD_BOT_SECRET);

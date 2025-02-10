@@ -1,4 +1,5 @@
 !src
+!boot.sh
 !config.template.toml
 !package.json
 !tsconfig.json
