@@ -1,6 +1,13 @@
 import {DiscordInteraction} from "../../classes/interactions/discordInteraction";
 import {EButtonType} from "../../classes/interactions/buttons/EButtonType";
-import {ButtonInteraction, Interaction} from "discord.js";
+import {
+    ActionRowBuilder,
+    ButtonInteraction,
+    EmbedBuilder,
+    Interaction,
+    StringSelectMenuBuilder,
+    StringSelectMenuOptionBuilder
+} from "discord.js";
 import {Buttons} from "../../classes/interactions/buttons/button.interaction.class";
 import {GetCommissionChannelAndCommission} from "../../helpers/gatherButtonsData";
 import {COMMISSIONS_DEV_ROLE_ID} from "../../environment";
@@ -38,5 +45,40 @@ export async function execute(genericInfo: {
         return;
     }
 
-    // TODO
+    const embed = new EmbedBuilder()
+        .setTitle("Change Status")
+        .setDescription(`Changes the status for the Commission-${commission?.commissionId}.`);
+
+    const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId(`setChangeStatus-${commission?.commissionId}`)
+        .setPlaceholder("Please select commission status")
+        .addOptions(new StringSelectMenuOptionBuilder()
+            .setValue("Pending")
+            .setLabel("Pending")
+            .setDescription("The commission is being set to pending start but has not been started yet.")
+        )
+        .addOptions(new StringSelectMenuOptionBuilder()
+            .setValue("NotStarted")
+            .setLabel("Not Started")
+            .setDescription("Commission is being planned but has not started programming stage yet.")
+        )
+        .addOptions(new StringSelectMenuOptionBuilder()
+            .setValue("InProgress")
+            .setLabel("In Progress")
+            .setDescription("The commission is in progress of being made and has updates associated with it.")
+        )
+        .addOptions(new StringSelectMenuOptionBuilder()
+            .setValue("Completed")
+            .setLabel("Completed")
+            .setDescription("The commission has been completed and is awaiting confirmation of completion by owner of commission..")
+        );
+
+    const row = new ActionRowBuilder<StringSelectMenuBuilder>()
+        .addComponents(selectMenu)
+
+    await button.reply({
+        embeds: [embed],
+        components: [row],
+        flags: 'Ephemeral'
+    });
 }
