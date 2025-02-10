@@ -51,3 +51,43 @@ export async function GetCommissionChannelAndCommission(databaseButton: Buttons)
         error: ""
     };
 }
+
+export async function GetCommissionChannelAndCommissionFromString(channelId: string) : Promise<{
+    commission: Commission | null,
+    commissionChannel: CommissionChannel | null,
+    error: string
+}> {
+    const commission = await Commission.findOne({
+        where: {
+            channelId: channelId
+        }
+    });
+
+    if (commission === null) {
+        return {
+            commission: null,
+            commissionChannel: null,
+            error: "Error Commission, channelId was not a valid commission thread id."
+        };
+    }
+
+    const commission_channel = await CommissionChannel.findOne({
+        where: {
+            channelId: channelId
+        }
+    });
+
+    if (commission_channel === null) {
+        return {
+            commission: null,
+            commissionChannel: null,
+            error: "Error Commission, commission_channel was null when fetched from database."
+        };
+    }
+
+    return {
+        commission: commission,
+        commissionChannel: commission_channel,
+        error: ""
+    };
+}
