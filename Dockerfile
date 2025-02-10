@@ -8,7 +8,6 @@ COPY tsconfig.json /discordBotFiles
 COPY config.template.toml /discordBotFiles
 
 COPY boot.sh .
-COPY startup.sh .
 
 RUN useradd -m container
 
