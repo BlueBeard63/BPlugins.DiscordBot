@@ -8,6 +8,7 @@ import {CommissionChannel} from "./classes/commissions/commission.channel.class"
 import {dealWithButton} from "./interactions/buttonInteractions";
 import {dealWithModel} from "./interactions/modalInteractions";
 import {CommissionWatcher} from "./helpers/commissionWatcher";
+import {Logger} from "./logger";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -24,6 +25,7 @@ const client = new Client({
 
 client.once("ready", async () => {
     await dbSync();
+    new CommissionWatcher(client);
 
     console.log("Bot has been launched!");
     console.log("https://discord.com/oauth2/authorize?client_id=1335982855444107285&permissions=8&integration_type=0&scope=bot");
@@ -63,5 +65,5 @@ client.on(Events.GuildMemberAdd, async (member) => {
     console.log("Assigned Roles To New User");
 })
 
-new CommissionWatcher(client);
+Logger.createPaths("./logs");
 client.login(DISCORD_BOT_SECRET);
