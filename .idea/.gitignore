@@ -7,5 +7,7 @@
 /dataSources/
 /dataSources.local.xml
 
+/logs
+
 .env
 config.toml
