@@ -21,6 +21,7 @@ export const DATABASE_USERNAME = config.data.DATABASE_USERNAME as string;
 export const DATABASE_PASSWORD = config.data.DATABASE_PASSWORD as string;
 export const DATABASE_NAME = config.data.DATABASE_NAME as string;
 
+export const COMMISSIONS_GUILD_ID = config.data.COMMISSIONS_GUILD_ID as string;
 export const COMMISSIONS_CHANNEL_ID = config.data.COMMISSIONS_CHANNEL_ID as string;
 export const COMMISSIONS_DEV_ROLE_ID = config.data.COMMISSIONS_DEV_ROLE_ID as string;
 export const DEFAULT_ROLE_IDS = (config.data.DEFAULT_ROLE_IDS as string)!.split(',');
