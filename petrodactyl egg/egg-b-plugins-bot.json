@@ -1,0 +1,31 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2025-02-10T20:59:30+00:00",
+    "name": "BPlugins Bot",
+    "author": "admin@bluebeard.site",
+    "description": "Bot for Blues Plugins",
+    "features": null,
+    "docker_images": {
+        "bluebeard63\/bplugins-bot:latest": "bluebeard63\/bplugins-bot:latest"
+    },
+    "file_denylist": [],
+    "startup": "npm install && npm run start",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Bot has been launched!\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": null,
+            "container": "alpine:3.4",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": []
+}
