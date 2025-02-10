@@ -14,10 +14,6 @@ export async function dealWithButton(interaction: Interaction<CacheType>) {
     const messageId = button.message.id;
     const channelId = interaction.channel!.id;
     
-    console.log(`Button Id: ${buttonId}`)
-    console.log(`Message Id: ${messageId}`);
-    console.log(`Channel Id: ${channelId}`);
-    
     if (await Buttons.doesButtonExist(buttonId, channelId, messageId)) {
         const databaseButton = await Buttons.getButton(buttonId, channelId, messageId);
 
