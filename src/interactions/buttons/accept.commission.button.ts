@@ -55,7 +55,7 @@ export async function execute(genericInfo: {
         .setTitle(`Commission-${commission!.commissionNumber} Accepted`)
         .setFields(
             {name: "Accepted At", value: time(new Date(new Date().toUTCString()), TimestampStyles.LongDateTime)},
-            {name: "Accepted By", value: "BlueBeard63"}
+            {name: "Accepted By", value: button.user.displayName }
         );
 
     await button.reply({
@@ -79,14 +79,32 @@ export async function execute(genericInfo: {
     const row = new ActionRowBuilder<ButtonBuilder>({
         components: [changeStatus_button, cancel_button],
     })
+    
+    const commissionEmbed = new EmbedBuilder()
+        .setTitle(`Commission-${commission?.commissionNumber}`)
+        .setFields(
+            {name: "Commission Name", value: `${commission!.commissionName}` },
+            {name: "Commission Budget", value: `${commission!.commissionBudget}` },
+            {name: "Commission Due Date", value: `${commission!.commissionDueDate}` },
+            {name: "Commission Status", value: ECommissionStatus.Accepted },
+            {name: "Accepted At", value: time(new Date(new Date().toUTCString()), TimestampStyles.LongDateTime)},
+            {name: "Accepted By", value: button.user.displayName }
+        );
 
+    const commissionDetails = new EmbedBuilder()
+        .setTitle(`Commission-${commission!.commissionNumber} Details`)
+        .setDescription(commission!.commissionDetails);
+    
     const thread = interaction.guild!.channels.cache.get(commissionChannel!.channelId) as PrivateThreadChannel;
     await thread.messages.cache.get(commissionChannel!.baseMessageId)!.edit({
+        embeds: [commissionEmbed, commissionDetails],
         components: [row]
     });
 
     await Commission.update({
         commissionStatus: ECommissionStatus.Accepted,
+        commissionAcceptedDate: new Date(new Date().toUTCString()),
+        commissionAcceptedBy: button.user.displayName
     }, {
         where: {
             commissionId: commission!.commissionId

@@ -1,5 +1,12 @@
 import {DiscordInteraction} from "../../classes/interactions/discordInteraction";
-import {AnySelectMenuInteraction, EmbedBuilder, Interaction, PrivateThreadChannel} from "discord.js";
+import {
+    AnySelectMenuInteraction,
+    EmbedBuilder,
+    Interaction,
+    PrivateThreadChannel,
+    time,
+    TimestampStyles
+} from "discord.js";
 import {COMMISSIONS_DEV_ROLE_ID} from "../../environment";
 import {GetCommissionChannelAndCommissionFromString} from "../../helpers/gatherButtonsData";
 import {Commission} from "../../classes/commissions/commission.class";
@@ -72,24 +79,26 @@ export async function execute(menu: AnySelectMenuInteraction, interaction: Inter
     const commissionEmbed = new EmbedBuilder()
         .setTitle(`Commission-${commission?.commissionNumber}`)
         .setFields(
-            {name: "Commission Name", value: `${commission!.commissionName}` },
-            {name: "Commission Budget", value: `${commission!.commissionBudget}` },
-            {name: "Commission Due Date", value: `${commission!.commissionDueDate}` },
-            {name: "Commission Status", value: newCommissionStatus }
+            {name: "Commission Name", value: `${commission!.commissionName}`},
+            {name: "Commission Budget", value: `${commission!.commissionBudget}`},
+            {name: "Commission Due Date", value: `${commission!.commissionDueDate}`},
+            {name: "Commission Status", value: newCommissionStatus},
+            {name: "Accepted At", value: time(commission?.commissionAcceptedDate!, TimestampStyles.LongDateTime)},
+            {name: "Accepted By", value: commission?.commissionAcceptedBy!}
         );
-    
+
     const commissionDetails = new EmbedBuilder()
         .setTitle(`Commission-${commission!.commissionNumber} Details`)
         .setDescription(commission!.commissionDetails);
-    
+
     await thread.messages.fetch();
     const message = thread.messages.cache.get(commissionChannel?.baseMessageId!);
-    
+
     if (message === undefined) {
         Logger.LogError("Message from cache was undefined");
         return;
     }
-    
+
     await message!.edit({
         embeds: [commissionEmbed, commissionDetails],
     });

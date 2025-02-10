@@ -75,7 +75,7 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
     });
 
     await Commission.update({
-        commissionStatus: ECommissionStatus.Rejected,
+        commissionStatus: ECommissionStatus.Canceled,
     }, {
         where: {
             commissionId: commission.commissionId

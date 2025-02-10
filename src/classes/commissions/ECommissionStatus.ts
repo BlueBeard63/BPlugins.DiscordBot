@@ -4,5 +4,6 @@ export enum ECommissionStatus {
     Rejected="Rejected",
     NotStarted="NotStarted",
     InProgress="InProgress",
-    Completed="Completed"
+    Completed="Completed",
+    Canceled="Canceled",
 }

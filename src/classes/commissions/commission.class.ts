@@ -9,6 +9,8 @@ export class Commission extends Model {
     declare commissionDetails: string;
     declare commissionBudget: number;
     declare commissionDueDate: Date;
+    declare commissionAcceptedDate: Date | null;
+    declare commissionAcceptedBy: string | null;
     declare commissionStatus: ECommissionStatus;
 }
 
@@ -43,6 +45,14 @@ Commission.init({
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
+    },
+    commissionAcceptedDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    commissionAcceptedBy: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     commissionStatus: {
         type: DataTypes.ENUM(...Object.values(ECommissionStatus)),
