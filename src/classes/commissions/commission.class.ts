@@ -6,6 +6,7 @@ export class Commission extends Model {
     declare commissionId: string;
     declare commissionNumber: number;
     declare commissionName: string;
+    declare commissionDetails: string;
     declare commissionBudget: number;
     declare commissionDueDate: Date;
     declare commissionStatus: ECommissionStatus;
@@ -27,6 +28,11 @@ Commission.init({
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: "Unknown",
+    },
+    commissionDetails: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "",  
     },
     commissionBudget: {
         type: DataTypes.INTEGER,

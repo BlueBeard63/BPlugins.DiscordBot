@@ -43,7 +43,8 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
         commissionId: commission_id,
         commissionName: commission_name,
         commissionBudget: commission_budget,
-        commissionDueDate: new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`)
+        commissionDueDate: new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`),
+        commissionDetails: commission_details
     });
 
     const channel = interaction.guild!.channels.cache.get(COMMISSIONS_CHANNEL_ID as string) as TextChannel;

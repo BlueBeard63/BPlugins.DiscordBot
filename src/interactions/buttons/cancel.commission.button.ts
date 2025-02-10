@@ -1,6 +1,13 @@
 import {DiscordInteraction} from "../../classes/interactions/discordInteraction";
 import {EButtonType} from "../../classes/interactions/buttons/EButtonType";
-import {ButtonInteraction, Interaction} from "discord.js";
+import {
+    ActionRowBuilder,
+    ButtonInteraction,
+    Interaction,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle
+} from "discord.js";
 import {Buttons} from "../../classes/interactions/buttons/button.interaction.class";
 import {GetCommissionChannelAndCommission} from "../../helpers/gatherButtonsData";
 
@@ -23,5 +30,19 @@ export async function execute(genericInfo: {
 
         return;
     }
-    // TODO
+    
+    const model = new ModalBuilder()
+        .setCustomId(`cancelCommission-${databaseButton.extraData.linkedCommissionId}`)
+        .setTitle("Cancel Commission");
+
+    const reason = new TextInputBuilder()
+        .setCustomId("reason")
+        .setLabel("Reason of Cancellation")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(false);
+
+    const commission_cancellation_reason = new ActionRowBuilder<TextInputBuilder>().addComponents(reason);
+
+    model.addComponents([commission_cancellation_reason]);
+    await button.showModal(model);
 }

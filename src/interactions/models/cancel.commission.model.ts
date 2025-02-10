@@ -18,27 +18,13 @@ export const data = new DiscordInteraction()
 
 
 export async function execute(modal: ModalSubmitInteraction, interaction: Interaction) {
-    const guildMember = interaction.guild!.members.cache.get(interaction.user.id)!;
-
-    await guildMember.guild.roles.fetch();
-
-    console.log(guildMember.roles.cache.keys());
-    if(!guildMember.roles.cache.hasAny(COMMISSIONS_DEV_ROLE_ID)){
-        await modal.reply({
-            content: "You do not have permission to accept a commission on behalf of BlueBeard63.",
-            flags: "Ephemeral"
-        });
-
-        return;
-    }
-
     const modalId = modal.customId;
-    const commissionId = modalId.replace("rejectCommission-", "");
-    
-    let closeMessage = modal.fields.getTextInputValue("reason") as string;
+    const commissionId = modalId.replace("cancelCommission-", "");
 
-    if(closeMessage === "") {
-        closeMessage = "No rejection message has been provided!";
+    let cancelMessage = modal.fields.getTextInputValue("reason") as string;
+
+    if (cancelMessage === "") {
+        cancelMessage = "No cancellation message has been provided!";
     }
 
     const commission = await Commission.findOne({
@@ -47,7 +33,7 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
         }
     });
 
-    if(commission === null) {
+    if (commission === null) {
         await modal.reply({
             content: "Error Commission, commission was null when fetched from database.",
             flags: "Ephemeral"
@@ -62,7 +48,7 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
         }
     });
 
-    if(commission_channel === null) {
+    if (commission_channel === null) {
         await modal.reply({
             content: "Error Commission, commission_channel was null when fetched from database.",
             flags: "Ephemeral"
@@ -72,11 +58,11 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
     }
 
     const rejectedCommission = new EmbedBuilder()
-        .setTitle(`Commission-${commission.commissionNumber} Rejected`)
+        .setTitle(`Commission-${commission.commissionNumber} Cancelled`)
         .setFields(
-            {name: "Rejected Reason", value: closeMessage},
-            {name: "Rejected At", value: time(new Date(new Date().toUTCString()), TimestampStyles.LongDateTime)},
-            {name: "Rejected By", value: "BlueBeard63"}
+            {name: "Cancellation Reason", value: cancelMessage},
+            {name: "Cancelled At", value: time(new Date(new Date().toUTCString()), TimestampStyles.LongDateTime)},
+            {name: "Cancelled By", value: modal.user.displayName}
         );
 
     await modal.reply({
@@ -102,6 +88,6 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
             messageId: commission_channel.baseMessageId!,
         }
     });
-    
-    await thread.setLocked(true, "Commission was Rejected");
+
+    await thread.setLocked(true, "Commission was Cancelled");
 }

@@ -47,10 +47,10 @@ export async function execute(genericInfo: {
 
     const embed = new EmbedBuilder()
         .setTitle("Change Status")
-        .setDescription(`Changes the status for the Commission-${commission?.commissionId}.`);
+        .setDescription(`Changes the status for the Commission-${commission?.commissionNumber}.`);
 
     const selectMenu = new StringSelectMenuBuilder()
-        .setCustomId(`setChangeStatus-${commission?.commissionId}`)
+        .setCustomId(`setChangeStatus-${commission?.commissionNumber}`)
         .setPlaceholder("Please select commission status")
         .addOptions(new StringSelectMenuOptionBuilder()
             .setValue("Pending")
@@ -70,7 +70,7 @@ export async function execute(genericInfo: {
         .addOptions(new StringSelectMenuOptionBuilder()
             .setValue("Completed")
             .setLabel("Completed")
-            .setDescription("The commission has been completed and is awaiting confirmation of completion by owner of commission..")
+            .setDescription("Completed and awaiting confirmation from commissioner.")
         );
 
     const row = new ActionRowBuilder<StringSelectMenuBuilder>()

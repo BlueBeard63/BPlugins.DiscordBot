@@ -3,13 +3,14 @@ import {AnySelectMenuInteraction, EmbedBuilder, Interaction, PrivateThreadChanne
 import {COMMISSIONS_DEV_ROLE_ID} from "../../environment";
 import {GetCommissionChannelAndCommissionFromString} from "../../helpers/gatherButtonsData";
 import {Commission} from "../../classes/commissions/commission.class";
+import {Logger} from "../../logger";
 
 export const data = new DiscordInteraction()
     .setName("setChangeStatus");
 
 export async function execute(menu: AnySelectMenuInteraction, interaction: Interaction) {
     const menuCommissionChannelId = menu.channelId;
-
+    console.log(`Line 12 | Channel Id: ${menuCommissionChannelId}`)
     const guildMember = interaction.guild?.members.cache.get(interaction.user.id)!;
 
     await guildMember.guild.roles.fetch();
@@ -76,8 +77,20 @@ export async function execute(menu: AnySelectMenuInteraction, interaction: Inter
             {name: "Commission Due Date", value: `${commission!.commissionDueDate}` },
             {name: "Commission Status", value: newCommissionStatus }
         );
-
-    await thread.messages.cache.get(commissionChannel?.baseMessageId!)!.edit({
-        embeds: [commissionEmbed]
+    
+    const commissionDetails = new EmbedBuilder()
+        .setTitle(`Commission-${commission!.commissionNumber} Details`)
+        .setDescription(commission!.commissionDetails);
+    
+    await thread.messages.fetch();
+    const message = thread.messages.cache.get(commissionChannel?.baseMessageId!);
+    
+    if (message === undefined) {
+        Logger.LogError("Message from cache was undefined");
+        return;
+    }
+    
+    await message!.edit({
+        embeds: [commissionEmbed, commissionDetails],
     });
 }

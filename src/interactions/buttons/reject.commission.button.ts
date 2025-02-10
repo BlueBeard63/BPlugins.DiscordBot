@@ -22,6 +22,8 @@ export async function execute(genericInfo: {
 }, interaction: Interaction, button: ButtonInteraction, databaseButton: Buttons) {
     const guildMember = interaction.guild!.members.cache.get(interaction.user.id)!;
 
+    await guildMember.guild.roles.fetch();
+    
     if(!guildMember.roles.cache.has(COMMISSIONS_DEV_ROLE_ID)){
         await button.reply({
             content: "You do not have permission to reject a commission on behalf of BlueBeard63.",
@@ -32,7 +34,7 @@ export async function execute(genericInfo: {
     }
 
     const model = new ModalBuilder()
-        .setCustomId(`rejectCommission`)
+        .setCustomId(`rejectCommission-${databaseButton.extraData.linkedCommissionId}`)
         .setTitle("Reject Commission");
 
     const reason = new TextInputBuilder()

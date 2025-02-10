@@ -13,7 +13,11 @@ export async function dealWithButton(interaction: Interaction<CacheType>) {
     const guildId = interaction.guild!.id;
     const messageId = button.message.id;
     const channelId = interaction.channel!.id;
-
+    
+    console.log(`Button Id: ${buttonId}`)
+    console.log(`Message Id: ${messageId}`);
+    console.log(`Channel Id: ${channelId}`);
+    
     if (await Buttons.doesButtonExist(buttonId, channelId, messageId)) {
         const databaseButton = await Buttons.getButton(buttonId, channelId, messageId);
 
@@ -26,6 +30,12 @@ export async function dealWithButton(interaction: Interaction<CacheType>) {
             }, interaction, button, databaseButton);
             return;
         }
+        
+        await button.reply({
+            content: "Could not find type for button in the buttons index. Please contact BlueBeard63",
+            flags: "Ephemeral"
+        });
+        return;
     }
 
     await button.reply({

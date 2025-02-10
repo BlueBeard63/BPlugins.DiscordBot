@@ -11,7 +11,7 @@ export class Buttons extends Model {
     declare buttonExtraData: string;
     declare extraData: ButtonExtra;
 
-    static async doesButtonExist(buttonId: string, channelId: any, messageId: string) : Promise<boolean> {
+    static async doesButtonExist(buttonId: string, channelId: string, messageId: string) : Promise<boolean> {
         return await Buttons.count({
             where: {
                 buttonId: buttonId,
@@ -21,7 +21,7 @@ export class Buttons extends Model {
         }) !== 0;
     }
 
-    static async getButton(buttonId: string, channelId: any, messageId: string) : Promise<Buttons>{
+    static async getButton(buttonId: string, channelId: string, messageId: string) : Promise<Buttons>{
         return (await Buttons.findOne({
             where: {
                 buttonId: buttonId,

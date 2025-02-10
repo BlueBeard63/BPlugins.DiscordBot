@@ -117,7 +117,7 @@ export async function execute(genericInfo: {
         buttonId: cancelCommissionButtonId,
         channelId: thread.id,
         messageId: commissionChannel!.baseMessageId!,
-        buttonType: EButtonType.ChangeStatus,
+        buttonType: EButtonType.CloseCommission,
         buttonExtraData: JSON.stringify(extraData)
     });
 }

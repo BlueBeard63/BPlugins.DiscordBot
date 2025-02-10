@@ -9,6 +9,7 @@ import {dealWithButton} from "./interactions/buttonInteractions";
 import {dealWithModel} from "./interactions/modalInteractions";
 import {CommissionWatcher} from "./helpers/commissionWatcher";
 import {Logger} from "./logger";
+import {dealWithSelectionMenu} from "./interactions/selectMenuInteractions";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -27,8 +28,8 @@ client.once("ready", async () => {
     await dbSync();
     new CommissionWatcher(client);
 
-    console.log("Bot has been launched!");
-    console.log("https://discord.com/oauth2/authorize?client_id=1335982855444107285&permissions=8&integration_type=0&scope=bot");
+    Logger.LogInfo("Bot has been launched!");
+    Logger.LogInfo("https://discord.com/oauth2/authorize?client_id=1335982855444107285&permissions=8&integration_type=0&scope=bot");
 
     client.guilds.cache.forEach(async guild => {
         await deployCommands({guildId: guild.id}, DISCORD_BOT_ID as string);
@@ -37,16 +38,20 @@ client.once("ready", async () => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
-        console.log(`${interaction.member?.user.username} has called command.`);
+        Logger.LogInfo(`${interaction.member?.user.username} has called command.`);
         await dealWithCommand(interaction);
     }
     if (interaction.isButton()) {
-        console.log(`${interaction.member?.user.username} has pressed button.`);
+        Logger.LogInfo(`${interaction.member?.user.username} has pressed button.`);
         await dealWithButton(interaction);
     }
     if (interaction.isModalSubmit()) {
-        console.log(`${interaction.member?.user.username} has submitted a modal.`);
+        Logger.LogInfo(`${interaction.member?.user.username} has submitted a modal.`);
         await dealWithModel(interaction);
+    }
+    if (interaction.isAnySelectMenu()) {
+        Logger.LogInfo(`${interaction.member?.user.username} has selected an option from menu.`);
+        await dealWithSelectionMenu(interaction);
     }
 });
 
@@ -59,10 +64,10 @@ client.on(Events.MessageReactionAdd, async (messageReaction, user) => {
 client.on(Events.GuildMemberAdd, async (member) => {
     await member.guild.roles.fetch();
 
-    console.log(`New User: ${member.displayName}`);
-    console.log("Assigning Roles To New User");
+    Logger.LogInfo(`New User: ${member.displayName}`);
+    Logger.LogInfo("Assigning Roles To New User");
     await member.roles.add(DEFAULT_ROLE_IDS, "Default User Roles");
-    console.log("Assigned Roles To New User");
+    Logger.LogInfo("Assigned Roles To New User");
 })
 
 Logger.createPaths("./logs");
