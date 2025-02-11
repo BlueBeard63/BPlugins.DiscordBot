@@ -22,7 +22,6 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
 
     await guildMember.guild.roles.fetch();
 
-    console.log(guildMember.roles.cache.keys());
     if(!guildMember.roles.cache.hasAny(COMMISSIONS_DEV_ROLE_ID)){
         await modal.reply({
             content: "You do not have permission to accept a commission on behalf of BlueBeard63.",
