@@ -8,8 +8,6 @@ export class Logger {
     private static genericLogPath: string;
 
     public static createPaths(loggerDirectoryPath: string){
-        console.log("Creating logger directory");
-
         this.errorLogPath = loggerDirectoryPath + "/errors.log";
         this.warningLogPath = loggerDirectoryPath + "/warning.log";
         this.infoLogPath = loggerDirectoryPath + "/info.log";
@@ -23,21 +21,19 @@ export class Logger {
         this.generatePathFiles(this.warningLogPath);
         this.generatePathFiles(this.infoLogPath);
         this.generatePathFiles(this.genericLogPath);
-
-        console.log("Created logger directory");
     }
 
     private static generatePathFiles(path: string){
         if(!fs.existsSync(path)) {
-            fs.writeFileSync(path, '');
+            fs.writeFileSync(path, '', { encoding: 'utf8' });
         }
     }
 
     private static writeMessageToPath(path: string, message: string){
         if(!fs.existsSync(path)) {
-            fs.writeFileSync(path, message);
+            fs.writeFileSync(path, message, { encoding: 'utf8' });
         }else {
-            fs.appendFileSync(path, "\n" + message);
+            fs.appendFileSync(path, "\n" + message, { encoding: 'utf8' });
         }
     }
 
