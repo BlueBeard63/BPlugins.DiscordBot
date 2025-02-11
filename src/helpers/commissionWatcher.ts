@@ -34,6 +34,11 @@ export class CommissionWatcher {
                 continue;
             }
 
+            if(thread.locked){
+                Logger.LogWarning(`Ignoring thread (${thread.name}) due to not being locked and supposedly closed/rejected`);
+                continue;
+            }
+
             if (thread.autoArchiveDuration === 10080) {
                 await thread.setAutoArchiveDuration(4320).catch(() => {
                     Logger.LogError(`Could not bump thread: ${thread.name}`);
