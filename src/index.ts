@@ -1,7 +1,7 @@
 import {Buttons} from "./classes/interactions/buttons/button.interaction.class";
 import {Commission} from "./classes/commissions/commission.class";
 import {CommissionOwner} from "./classes/commissions/commission.owner.class";
-import {Client, Events, GatewayIntentBits, Partials} from "discord.js";
+import {Client, EmbedBuilder, Events, GatewayIntentBits, Partials} from "discord.js";
 import {DEFAULT_ROLE_IDS, DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
 import {dealWithCommand, deployCommands} from "./interactions/commandInteractions";
 import {CommissionChannel} from "./classes/commissions/commission.channel.class";
@@ -10,9 +10,11 @@ import {dealWithModel} from "./interactions/modalInteractions";
 import {CommissionWatcher} from "./helpers/commissionWatcher";
 import {Logger} from "./logger";
 import {dealWithSelectionMenu} from "./interactions/selectMenuInteractions";
+import {ReactionRole} from "./classes/interactions/reaction/reaction.interaction.class";
 
 const dbSync = async () => {
     await Buttons.sync();
+    await ReactionRole.sync();
 
     await Commission.sync();
     await CommissionOwner.sync();
@@ -56,9 +58,87 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 client.on(Events.MessageReactionRemove, async (messageReaction, user) => {
+    await messageReaction.fetch();
+
+    if(await ReactionRole.count({
+        where: {
+            messageId: messageReaction.message.id,
+            channelId: messageReaction.message.channelId,
+            reactionId: messageReaction.emoji.toString().codePointAt(1)!.toString()
+        }
+    }) === 0){
+        return;
+    }
+
+    const reactionRole = await ReactionRole.findOne({
+        where: {
+            messageId: messageReaction.message.id,
+            channelId: messageReaction.message.channelId,
+            reactionId: messageReaction.emoji.toString().codePointAt(1)!.toString()
+        }
+    });
+
+    if(reactionRole === null){
+        return;
+    }
+
+    await user.fetch();
+    const guild = messageReaction.message.guild;
+
+    await guild?.roles.fetch();
+    guild?.members.cache.get(user.id)?.roles.remove(reactionRole.roleId, "Reaction Role Remove");
+
+    const embed = new EmbedBuilder()
+        .setTitle("Reaction Role")
+        .addFields(
+            { name: "Removed Role:" , value: `${guild?.roles?.cache.get(reactionRole.roleId)?.name}` }
+        );
+
+    await user.send({
+        embeds: [embed],
+    });
 });
 
 client.on(Events.MessageReactionAdd, async (messageReaction, user) => {
+    await messageReaction.fetch();
+
+    if(await ReactionRole.count({
+        where: {
+            messageId: messageReaction.message.id,
+            channelId: messageReaction.message.channelId,
+            reactionId: messageReaction.emoji.toString().codePointAt(1)!.toString()
+        }
+    }) === 0){
+        return;
+    }
+
+    const reactionRole = await ReactionRole.findOne({
+        where: {
+            messageId: messageReaction.message.id,
+            channelId: messageReaction.message.channelId,
+            reactionId: messageReaction.emoji.toString().codePointAt(1)!.toString()
+        }
+    });
+
+    if(reactionRole === null){
+        return;
+    }
+
+    await user.fetch();
+    const guild = messageReaction.message.guild;
+
+    await guild?.roles.fetch();
+    guild?.members.cache.get(user.id)?.roles.add(reactionRole.roleId, "Reaction Role Added");
+
+    const embed = new EmbedBuilder()
+        .setTitle("Reaction Role")
+        .addFields(
+            { name: "Added Role:" , value: `${guild?.roles?.cache.get(reactionRole.roleId)?.name}` }
+        );
+
+    await user.send({
+        embeds: [embed],
+    });
 });
 
 client.on(Events.GuildMemberAdd, async (member) => {
@@ -68,7 +148,7 @@ client.on(Events.GuildMemberAdd, async (member) => {
     Logger.LogInfo("Assigning Roles To New User");
     await member.roles.add(DEFAULT_ROLE_IDS, "Default User Roles");
     Logger.LogInfo("Assigned Roles To New User");
-})
+});
 
 Logger.createPaths("./logs");
 client.login(DISCORD_BOT_SECRET);
