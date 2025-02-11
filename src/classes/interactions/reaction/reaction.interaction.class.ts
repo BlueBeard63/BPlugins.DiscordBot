@@ -33,6 +33,7 @@ ReactionRole.init({
         allowNull: false,
     }
 }, {
+    tableName: "reactions",
     sequelize: sequelizeConnection,
     createdAt: true,
     updatedAt: false,

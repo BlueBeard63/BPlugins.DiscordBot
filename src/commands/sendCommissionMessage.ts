@@ -1,6 +1,6 @@
 import {
     ActionRowBuilder,
-    ButtonBuilder, ButtonStyle,
+    ButtonBuilder, ButtonStyle, ChannelType,
     CommandInteraction,
     EmbedBuilder,
     PermissionsBitField,
@@ -17,6 +17,7 @@ export const data = new SlashCommandBuilder()
         .setName("channel")
         .setDescription("The channel to send the open commission embed in.")
         .setRequired(true)
+        .addChannelTypes(ChannelType.GuildText)
     )
     .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator);
 
