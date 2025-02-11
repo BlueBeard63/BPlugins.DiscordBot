@@ -10,9 +10,11 @@ import {dealWithModel} from "./interactions/modalInteractions";
 import {CommissionWatcher} from "./helpers/commissionWatcher";
 import {Logger} from "./logger";
 import {dealWithSelectionMenu} from "./interactions/selectMenuInteractions";
+import {ReactionRole} from "./classes/interactions/reaction/reaction.interaction.class";
 
 const dbSync = async () => {
     await Buttons.sync();
+    await ReactionRole.sync();
 
     await Commission.sync();
     await CommissionOwner.sync();
