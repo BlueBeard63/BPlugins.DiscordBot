@@ -38,19 +38,19 @@ client.once("ready", async () => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
-        Logger.LogInfo(`${interaction.member?.user.username} has called command.`);
+        Logger.LogInfo(`${interaction.user.displayName} has called command.`);
         await dealWithCommand(interaction);
     }
     if (interaction.isButton()) {
-        Logger.LogInfo(`${interaction.member?.user.username} has pressed button.`);
+        Logger.LogInfo(`${interaction.user.displayName} has pressed button.`);
         await dealWithButton(interaction);
     }
     if (interaction.isModalSubmit()) {
-        Logger.LogInfo(`${interaction.member?.user.username} has submitted a modal.`);
+        Logger.LogInfo(`${interaction.user.displayName} has submitted a modal.`);
         await dealWithModel(interaction);
     }
     if (interaction.isAnySelectMenu()) {
-        Logger.LogInfo(`${interaction.member?.user.username} has selected an option from menu.`);
+        Logger.LogInfo(`${interaction.user.displayName} has selected an option from menu.`);
         await dealWithSelectionMenu(interaction);
     }
 });
