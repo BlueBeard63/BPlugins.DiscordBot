@@ -11,6 +11,7 @@ import {CommissionWatcher} from "./helpers/commissionWatcher";
 import {Logger} from "./logger";
 import {dealWithSelectionMenu} from "./interactions/selectMenuInteractions";
 import {ReactionRole} from "./classes/interactions/reaction/reaction.interaction.class";
+import { Purchase } from "./classes/purchases/purchase.class";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -19,6 +20,8 @@ const dbSync = async () => {
     await Commission.sync();
     await CommissionOwner.sync();
     await CommissionChannel.sync();
+
+    await Purchase.sync();
 }
 
 const client = new Client({
