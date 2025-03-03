@@ -35,5 +35,7 @@ Purchase.init({
     createdAt: true,
     updatedAt: false,
 
-    paranoid: true
+    paranoid: true,
+
+    tableName: 'purchase'
 });
