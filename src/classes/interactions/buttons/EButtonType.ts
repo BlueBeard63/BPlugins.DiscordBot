@@ -6,4 +6,5 @@ export enum EButtonType {
     CommissionHelp="CommissionHelp",
     CloseCommission="CloseCommission",
     ChangeStatus="ChangeStatus",
+    ClaimPurchase = "ClaimPurchase",
 }
