@@ -12,6 +12,7 @@ import {Logger} from "./logger";
 import {dealWithSelectionMenu} from "./interactions/selectMenuInteractions";
 import {ReactionRole} from "./classes/interactions/reaction/reaction.interaction.class";
 import { Purchase } from "./classes/purchases/purchase.class";
+import { PurchaseServer } from "./purchase.server";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -155,3 +156,5 @@ client.on(Events.GuildMemberAdd, async (member) => {
 
 Logger.createPaths("./logs");
 client.login(DISCORD_BOT_SECRET);
+
+new PurchaseServer();
