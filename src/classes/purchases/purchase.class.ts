@@ -30,6 +30,10 @@ Purchase.init({
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    claimId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
     }
 }, {
     sequelize: sequelizeConnection,
@@ -39,11 +43,4 @@ Purchase.init({
     paranoid: true,
 
     tableName: 'purchase'
-});
-
-Product.hasMany(Purchase, {
-    sourceKey: "productDigitalId",
-    foreignKey: "productDigitalId",
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
 });

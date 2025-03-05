@@ -22,7 +22,8 @@ PurchaseClaim.init({
     },
     purchaseId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     usageKey: {
         type: DataTypes.STRING,
@@ -35,11 +36,4 @@ PurchaseClaim.init({
     paranoid: true,
 
     tableName: 'productclaim'
-});
-
-PurchaseClaim.hasOne(Purchase, {
-    sourceKey: 'purchaseId',
-    foreignKey: 'purchaseId',
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
 });

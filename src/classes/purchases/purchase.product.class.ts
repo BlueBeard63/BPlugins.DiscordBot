@@ -1,23 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelizeConnection } from "../../database/database";
+import { Purchase } from "./purchase.class";
 
 export class Product extends Model {
-    declare productId: number;
     declare productDigitalId: string;
     declare productName: string;
     declare productUrl: string;
 }
 
 Product.init({
-    productId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true
-    },
     productDigitalId: {
         type: DataTypes.STRING,
         allowNull: false,
+        primaryKey: true,
     },
     productName: {
         type: DataTypes.STRING,
@@ -35,4 +30,11 @@ Product.init({
     paranoid: true,
 
     tableName: 'products'
+});
+
+Product.hasMany(Purchase, {
+    sourceKey: "productDigitalId",
+    foreignKey: "productDigitalId",
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
 });
