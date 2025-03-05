@@ -1,18 +1,20 @@
-import {Buttons} from "./classes/interactions/buttons/button.interaction.class";
-import {Commission} from "./classes/commissions/commission.class";
-import {CommissionOwner} from "./classes/commissions/commission.owner.class";
-import {Client, EmbedBuilder, Events, GatewayIntentBits, Partials} from "discord.js";
-import {DEFAULT_ROLE_IDS, DISCORD_BOT_ID, DISCORD_BOT_SECRET} from "./environment";
-import {dealWithCommand, deployCommands} from "./interactions/commandInteractions";
-import {CommissionChannel} from "./classes/commissions/commission.channel.class";
-import {dealWithButton} from "./interactions/buttonInteractions";
-import {dealWithModel} from "./interactions/modalInteractions";
-import {CommissionWatcher} from "./helpers/commissionWatcher";
-import {Logger} from "./logger";
-import {dealWithSelectionMenu} from "./interactions/selectMenuInteractions";
-import {ReactionRole} from "./classes/interactions/reaction/reaction.interaction.class";
-import { Purchase } from "./classes/purchases/purchase.class";
+import { Buttons } from "./classes/interactions/buttons/button.interaction.class";
+import { Commission } from "./classes/commissions/commission.class";
+import { CommissionOwner } from "./classes/commissions/commission.owner.class";
+import { Client, EmbedBuilder, Events, GatewayIntentBits, Partials } from "discord.js";
+import { DEFAULT_ROLE_IDS, DISCORD_BOT_ID, DISCORD_BOT_SECRET } from "./environment";
+import { dealWithCommand, deployCommands } from "./interactions/commandInteractions";
+import { CommissionChannel } from "./classes/commissions/commission.channel.class";
+import { dealWithButton } from "./interactions/buttonInteractions";
+import { dealWithModel } from "./interactions/modalInteractions";
+import { CommissionWatcher } from "./helpers/commissionWatcher";
+import { Logger } from "./logger";
+import { dealWithSelectionMenu } from "./interactions/selectMenuInteractions";
+import { ReactionRole } from "./classes/interactions/reaction/reaction.interaction.class";
 import { PurchaseServer } from "./purchase.server";
+import { Purchase } from "./classes/purchases/purchase.class";
+import { Product } from "./classes/purchases/purchase.product.class";
+import { PurchaseClaim } from "./classes/purchases/purchase.claim.class";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -22,7 +24,9 @@ const dbSync = async () => {
     await CommissionOwner.sync();
     await CommissionChannel.sync();
 
+    await Product.sync();
     await Purchase.sync();
+    await PurchaseClaim.sync();
 }
 
 const client = new Client({
@@ -38,7 +42,7 @@ client.once("ready", async () => {
     Logger.LogInfo("https://discord.com/oauth2/authorize?client_id=1335982855444107285&permissions=8&integration_type=0&scope=bot");
 
     client.guilds.cache.forEach(async guild => {
-        await deployCommands({guildId: guild.id}, DISCORD_BOT_ID as string);
+        await deployCommands({ guildId: guild.id }, DISCORD_BOT_ID as string);
     });
 });
 
@@ -64,13 +68,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on(Events.MessageReactionRemove, async (messageReaction, user) => {
     await messageReaction.fetch();
 
-    if(await ReactionRole.count({
+    if (await ReactionRole.count({
         where: {
             messageId: messageReaction.message.id,
             channelId: messageReaction.message.channelId,
             reactionId: messageReaction.emoji.toString().codePointAt(1)!.toString()
         }
-    }) === 0){
+    }) === 0) {
         return;
     }
 
@@ -82,7 +86,7 @@ client.on(Events.MessageReactionRemove, async (messageReaction, user) => {
         }
     });
 
-    if(reactionRole === null){
+    if (reactionRole === null) {
         return;
     }
 
@@ -95,7 +99,7 @@ client.on(Events.MessageReactionRemove, async (messageReaction, user) => {
     const embed = new EmbedBuilder()
         .setTitle("Reaction Role")
         .addFields(
-            { name: "Removed Role:" , value: `${guild?.roles?.cache.get(reactionRole.roleId)?.name}` }
+            { name: "Removed Role:", value: `${guild?.roles?.cache.get(reactionRole.roleId)?.name}` }
         );
 
     await user.send({
@@ -106,13 +110,13 @@ client.on(Events.MessageReactionRemove, async (messageReaction, user) => {
 client.on(Events.MessageReactionAdd, async (messageReaction, user) => {
     await messageReaction.fetch();
 
-    if(await ReactionRole.count({
+    if (await ReactionRole.count({
         where: {
             messageId: messageReaction.message.id,
             channelId: messageReaction.message.channelId,
             reactionId: messageReaction.emoji.toString().codePointAt(1)!.toString()
         }
-    }) === 0){
+    }) === 0) {
         return;
     }
 
@@ -124,7 +128,7 @@ client.on(Events.MessageReactionAdd, async (messageReaction, user) => {
         }
     });
 
-    if(reactionRole === null){
+    if (reactionRole === null) {
         return;
     }
 
@@ -137,7 +141,7 @@ client.on(Events.MessageReactionAdd, async (messageReaction, user) => {
     const embed = new EmbedBuilder()
         .setTitle("Reaction Role")
         .addFields(
-            { name: "Added Role:" , value: `${guild?.roles?.cache.get(reactionRole.roleId)?.name}` }
+            { name: "Added Role:", value: `${guild?.roles?.cache.get(reactionRole.roleId)?.name}` }
         );
 
     await user.send({

@@ -19,7 +19,8 @@ export async function execute(genericInfo: {
 
     const purchaseReferenceId = new TextInputBuilder()
             .setCustomId("purchase_reference_id")
-            .setLabel("Reference Id From Store Purchase")
+            .setLabel("Transaction Invoice Id From Paypal")
+            .setPlaceholder("Such as: 6139c6c1-8037-4529-98af-5182713730b6")
             .setStyle(TextInputStyle.Short)
             .setRequired(true);
     

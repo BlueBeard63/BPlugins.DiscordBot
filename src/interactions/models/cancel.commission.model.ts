@@ -11,11 +11,9 @@ import {CommissionChannel} from "../../classes/commissions/commission.channel.cl
 import {Commission} from "../../classes/commissions/commission.class";
 import {ECommissionStatus} from "../../classes/commissions/ECommissionStatus";
 import {Buttons} from "../../classes/interactions/buttons/button.interaction.class";
-import {COMMISSIONS_DEV_ROLE_ID} from "../../environment";
 
 export const data = new DiscordInteraction()
-    .setName("rejectCommission");
-
+    .setName("cancelCommission");
 
 export async function execute(modal: ModalSubmitInteraction, interaction: Interaction) {
     const modalId = modal.customId;

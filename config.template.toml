@@ -15,5 +15,6 @@ DATABASE_USERNAME="root"
 DATABASE_PASSWORD="password123"
 DATABASE_NAME="discordbot"
 
-[StorePage]
+[KofiStore]
 StorePagePort=3000
+StoreVerificationToken = 'Insert verification token'

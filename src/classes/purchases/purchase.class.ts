@@ -1,11 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelizeConnection } from "../../database/database";
+import { Product } from "./purchase.product.class";
 
 export class Purchase extends Model {
     declare purchaseId: number;
-    declare referenceId: string;
-    declare productKey: string;
-    declare productName: string;
+    declare transcationId: string;
+    declare productDigitalId: string;
+    declare purchaseClaimed: boolean;
 }
 
 Purchase.init({
@@ -15,20 +16,20 @@ Purchase.init({
         autoIncrement: true,
         allowNull: false
     },
-    referenceId: {
+    transcationId: {        
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'unknown'
     },
-    productKey: {
-        type: DataTypes.CHAR(36),
+    productDigitalId: {
+        type: DataTypes.STRING,
         allowNull: false,
         defaultValue: ''
     },
-    productName: {
-        type: DataTypes.STRING,
+    purchaseClaimed: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: 'Unrecorded'
+        defaultValue: false
     }
 }, {
     sequelize: sequelizeConnection,
@@ -38,4 +39,11 @@ Purchase.init({
     paranoid: true,
 
     tableName: 'purchase'
+});
+
+Product.hasMany(Purchase, {
+    sourceKey: "productDigitalId",
+    foreignKey: "productDigitalId",
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
 });

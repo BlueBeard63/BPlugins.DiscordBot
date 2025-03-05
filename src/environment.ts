@@ -27,3 +27,4 @@ export const COMMISSIONS_DEV_ROLE_ID = config.data.DiscordServer.COMMISSIONS_DEV
 export const DEFAULT_ROLE_IDS = (config.data.DiscordServer.DEFAULT_ROLE_IDS as string)!.split(',');
 
 export const KofiServerPort = config.data.KofiStore.Port as number;
+export const KofiVerificationToken = config.data.KofiStore.StoreVerificationToken as string;
