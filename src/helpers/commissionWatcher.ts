@@ -16,6 +16,7 @@ export class CommissionWatcher {
             .map(x => x);
 
         await this.BumpThreads(privateThreads);
+        setTimeout(async () => await this.GatherAndBump(client), 1000 * 60 * 60);
     }
 
     private async BumpThreads(threads: PrivateThreadChannel[] | undefined): Promise<void> {
