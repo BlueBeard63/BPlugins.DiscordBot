@@ -4,6 +4,7 @@ import * as rejectCommission from "./reject.commission.button"
 import * as helpCommission from "./help.commission.button"
 import * as changeStatusCommission from "./changeStatus.commission.button"
 import * as cancelCommission from "./cancel.commission.button"
+import * as claimPurchase from "./claim.purchase.button"
 
 
 export const buttons = [
@@ -12,5 +13,6 @@ export const buttons = [
     rejectCommission,
     helpCommission,
     changeStatusCommission,
-    cancelCommission
+    cancelCommission,
+    claimPurchase
 ];

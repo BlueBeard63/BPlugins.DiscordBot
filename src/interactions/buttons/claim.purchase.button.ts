@@ -2,6 +2,7 @@ import { ActionRowBuilder, ButtonInteraction, Interaction, ModalBuilder, TextInp
 import { EButtonType } from "../../classes/interactions/buttons/EButtonType";
 import { DiscordInteraction } from "../../classes/interactions/discordInteraction";
 import { Buttons } from "../../classes/interactions/buttons/button.interaction.class";
+import { randomUUID } from 'crypto';
 
 export const data = new DiscordInteraction()
     .setName(EButtonType.ClaimPurchase);
@@ -15,7 +16,7 @@ export async function execute(genericInfo: {
 {
     const model = new ModalBuilder()
         .setTitle("Claim Purchase")
-        .setCustomId("claim-purchase");
+        .setCustomId(`claimPurchase-${randomUUID().toString()}`);
 
     const purchaseReferenceId = new TextInputBuilder()
             .setCustomId("purchase_reference_id")
@@ -26,7 +27,7 @@ export async function execute(genericInfo: {
     
     const purchaseReferenceId_row = new ActionRowBuilder<TextInputBuilder>().addComponents(purchaseReferenceId);
 
-    model.addComponents(purchaseReferenceId_row)
+    model.addComponents(purchaseReferenceId_row);
 
     await button.showModal(model);
 }

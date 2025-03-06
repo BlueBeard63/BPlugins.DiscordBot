@@ -6,8 +6,7 @@ import { randomUUID } from 'crypto';
 import { PurchaseClaim } from "../../classes/purchases/purchase.claim.class";
 
 export const data = new DiscordInteraction()
-    .setName("claim-purchase");
-
+    .setName("claimPurchase");
 
 export async function execute(modal: ModalSubmitInteraction, interaction: Interaction) {
     const transactionId = modal.fields.getTextInputValue("purchase_reference_id") as string;
@@ -47,12 +46,22 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
     });
 
     for (const purchase of purchases) {
-        const usageKey = randomUUID();
+        const usageKey = randomUUID().toString();
 
         await PurchaseClaim.create({
             claimUser: interaction.user.id,
             purchaseId: purchase.purchaseId,
             usageKey: usageKey
+        });
+
+        await Purchase.update({
+            purchaseClaimed: true
+        }, {
+            where: {
+                transcationId: transactionId,
+                purchaseClaimed: false,
+                productDigitalId: purchase.productDigitalId
+            }
         });
 
         const embed = new EmbedBuilder()
@@ -80,18 +89,9 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
             embeds: [embed]
         });
     }
- 
-    await Purchase.update({
-        purchaseClaimed: true
-    }, {
-        where: {
-            transcationId: transactionId,
-            purchaseClaimed: false
-        }
-    });
 
     modal.reply({
-        content: `You have now redeemed all purchases accossiated with transaction id: ${transactionId}`,
+        content: `You have now redeemed products accossiated with transaction id: ${transactionId}`,
         flags: 'Ephemeral'
-    })
+    });
 }
