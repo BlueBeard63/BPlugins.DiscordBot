@@ -35,5 +35,5 @@ PurchaseClaim.init({
     updatedAt: false,
     paranoid: true,
 
-    tableName: 'productclaim'
+    tableName: 'product_claim'
 });
