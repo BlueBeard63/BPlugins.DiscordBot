@@ -15,6 +15,7 @@ import { PurchaseServer } from "./purchase.server";
 import { Purchase } from "./classes/purchases/purchase.class";
 import { Product } from "./classes/purchases/purchase.product.class";
 import { PurchaseClaim } from "./classes/purchases/purchase.claim.class";
+import { WhitelistedProducts } from "./classes/purchases/product.whitelist.class";
 
 const dbSync = async () => {
     await Buttons.sync();
@@ -26,6 +27,7 @@ const dbSync = async () => {
 
     await Product.sync();
     await PurchaseClaim.sync();
+    await WhitelistedProducts.sync();
     await Purchase.sync();
 }
 

@@ -10,6 +10,7 @@ class ProductRoutes {
     
     initRoutes(){
         this.router.get("/allowed/:serverIp/:liscenseKey", ProductController.isWhitelisted);
+        this.router.get("/create/:serverIp/:liscenseKey", ProductController.addWhitelist);
     }
 }
 
