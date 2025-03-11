@@ -4,6 +4,7 @@ import { Purchase } from "../../classes/purchases/purchase.class";
 import { Product } from "../../classes/purchases/purchase.product.class";
 import { randomUUID } from 'crypto';
 import { PurchaseClaim } from "../../classes/purchases/purchase.claim.class";
+import * as fs from 'node:fs';
 
 export const data = new DiscordInteraction()
     .setName("claimPurchase");
@@ -88,6 +89,18 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
 
         await interaction.user.send({
             embeds: [embed]
+        });
+    }
+
+    if(purchases.length > 0){
+        if(!fs.existsSync("./LoaderFiles")){
+            fs.mkdirSync("./LoaderFiles");
+        }
+
+        const files = fs.readdirSync("./LoaderFiles");
+
+        await interaction.user.send({
+            files: files.map(x => `./LoaderFiles/${x}`)
         });
     }
 
