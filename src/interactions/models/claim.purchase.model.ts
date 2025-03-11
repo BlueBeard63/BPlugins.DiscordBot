@@ -48,14 +48,15 @@ export async function execute(modal: ModalSubmitInteraction, interaction: Intera
     for (const purchase of purchases) {
         const usageKey = randomUUID().toString();
 
-        await PurchaseClaim.create({
+        const claim = await PurchaseClaim.create({
             claimUser: interaction.user.id,
             purchaseId: purchase.purchaseId,
             usageKey: usageKey
         });
 
         await Purchase.update({
-            purchaseClaimed: true
+            purchaseClaimed: true,
+            claimId: claim.claimId
         }, {
             where: {
                 transcationId: transactionId,

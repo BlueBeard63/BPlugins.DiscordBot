@@ -1,12 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelizeConnection } from "../../database/database";
-import { Product } from "./purchase.product.class";
 
 export class Purchase extends Model {
     declare purchaseId: number;
     declare transcationId: string;
     declare productDigitalId: string;
     declare purchaseClaimed: boolean;
+    declare claimId: number;
 }
 
 Purchase.init({

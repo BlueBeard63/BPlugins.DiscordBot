@@ -18,7 +18,7 @@ WhitelistedProducts.init({
     serverIp: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: literal("unrecorded")
+        defaultValue: "unrecorded"
     },
     claimId: {
         type: DataTypes.INTEGER,
