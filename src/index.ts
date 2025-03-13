@@ -26,9 +26,9 @@ const dbSync = async () => {
     await CommissionChannel.sync();
 
     await Product.sync();
+    await Purchase.sync();
     await PurchaseClaim.sync();
     await WhitelistedProducts.sync();
-    await Purchase.sync();
 }
 
 const client = new Client({

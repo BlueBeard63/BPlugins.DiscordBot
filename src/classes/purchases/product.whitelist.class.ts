@@ -32,10 +32,3 @@ WhitelistedProducts.init({
     paranoid: true,
     tableName: "product_whitelists"
 });
-
-WhitelistedProducts.hasMany(PurchaseClaim, {
-    foreignKey: 'claimId',
-    sourceKey: 'claimId',
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-});

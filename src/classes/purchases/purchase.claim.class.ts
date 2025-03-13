@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelizeConnection } from "../../database/database";
 import { Purchase } from "./purchase.class";
+import { WhitelistedProducts } from "./product.whitelist.class";
 
 export class PurchaseClaim extends Model {
     declare claimId: number;
@@ -36,4 +37,18 @@ PurchaseClaim.init({
     paranoid: true,
 
     tableName: 'product_claim'
+});
+
+PurchaseClaim.hasMany(WhitelistedProducts, {
+    foreignKey: 'claimId',
+    sourceKey: 'claimId',
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+});
+
+PurchaseClaim.hasOne(Purchase, {
+    foreignKey: 'claimId',
+    sourceKey: 'claimId',
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
 });
