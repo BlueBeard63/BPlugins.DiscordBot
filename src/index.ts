@@ -111,22 +111,7 @@ client.on(Events.MessageReactionRemove, async (messageReaction, user) => {
             embeds: [embed],
         });
     } catch (error) {
-        Logger.LogWarning(`Could not send DM to user ${user.displayName}, sending to channel instead: ${error}`);
-        // Send notification in the channel instead
-        const channelEmbed = new EmbedBuilder()
-            .setTitle("Reaction Role")
-            .addFields(
-                { name: "User:", value: `<@${user.id}>` },
-                { name: "Removed Role:", value: `${guild?.roles?.cache.get(reactionRole.roleId)?.name}` }
-            )
-            .setColor(0xFF0000);
-
-        const channel = messageReaction.message.channel;
-        if ('send' in channel) {
-            await channel.send({
-                embeds: [channelEmbed],
-            });
-        }
+        Logger.LogWarning(`Could not send DM to user ${user.displayName}: ${error}`);
     }
 });
 
@@ -174,22 +159,7 @@ client.on(Events.MessageReactionAdd, async (messageReaction, user) => {
             embeds: [embed],
         });
     } catch (error) {
-        Logger.LogWarning(`Could not send DM to user ${user.displayName}, sending to channel instead: ${error}`);
-        // Send notification in the channel instead
-        const channelEmbed = new EmbedBuilder()
-            .setTitle("Reaction Role")
-            .addFields(
-                { name: "User:", value: `<@${user.id}>` },
-                { name: "Added Role:", value: `${guild?.roles?.cache.get(reactionRole.roleId)?.name}` }
-            )
-            .setColor(0x00FF00); // Green color for addition
-
-        const channel = messageReaction.message.channel;
-        if ('send' in channel) {
-            await channel.send({
-                embeds: [channelEmbed],
-            });
-        }
+        Logger.LogWarning(`Could not send DM to user ${user.displayName}: ${error}`);
     }
 });
 
