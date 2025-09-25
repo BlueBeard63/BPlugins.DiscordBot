@@ -36,7 +36,7 @@ export const data = new SlashCommandBuilder()
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageRoles);
 
 export async function execute(interaction: CommandInteraction) {
-    const channelId = interaction.options.get("channel_id")!.value as string;
+    const channelId = interaction.options.get("channel")!.value as string;
     const messageId = interaction.options.get("message_id")!.value as string;
     const roleId = interaction.options.get("role")!.value as string;
     const reaction = (interaction.options.get("reaction")!.value as string);
